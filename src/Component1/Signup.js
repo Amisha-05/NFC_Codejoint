@@ -1,7 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Signup.css';
 import ayurmedic from './Images/logo.png.png'
+import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+
 const Signup = () => {
+  // make the variables here
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+  
+  const navigate = useNavigate();
+
+  // the login function
+  const logInUser = () => {
+    if(email.length === 0){
+      alert("Email has left Blank!");
+    }
+    else if(password.length === 0){
+      alert("password has left Blank!");
+    }
+    else{
+        axios.post('http://127.0.0.1:5000/login', {
+            email: email,
+            password: password
+        })
+        .then(function (response) {
+            console.log(response);
+            //console.log(response.data);
+            navigate("/Signup");
+        })
+        .catch(function (error) {
+            console.log(error, 'error');
+            if (error.response.status === 401) {
+                alert("Invalid credentials");
+            }
+        });
+    }
+}
+
+const SignInUser = () => {
+if(email.length === 0){
+  alert("Email has left Blank!");
+}
+else if(password.length === 0){
+  alert("password has left Blank!");
+}
+else{
+    axios.post('http://127.0.0.1:5000/signup', {
+        email: email,
+        password: password
+    })
+    .then(function (response) {
+        console.log(response);
+        //console.log(response.data);
+        navigate("/login");   //this is /login of port3000 aka react server
+    })
+    .catch(function (error) {
+        console.log(error, 'error');
+        if (error.response.status === 401) {
+            alert("Invalid credentials");
+        }
+    });
+}
+}
+
   return (
     <section className="section">
       <div className="container">
@@ -27,14 +89,14 @@ const Signup = () => {
                       <div className="section text-center">
                         <h4 className="mb-4 pb-3">Log In</h4>
                         <div className="form-group">
-                          <input type="email" name="logemail" className="form-style" placeholder="Your Email" id="logemail" autoComplete="off" />
+                          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} name="logemail" className="form-style" placeholder="Your Email" id="logemail" autoComplete="off" />
                           <i className="input-icon uil uil-at"></i>
                         </div>
                         <div className="form-group mt-2">
-                          <input type="password" name="logpass" className="form-style" placeholder="Your Password" id="logpass" autoComplete="off" />
+                          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="logpass" className="form-style" placeholder="Your Password" id="logpass" autoComplete="off" />
                           <i className="input-icon uil uil-lock-alt"></i>
                         </div>
-                        <a href="#" className="btn mt-4">submit</a>
+                        <button className="btn mt-4" onClick={logInUser}>submit</button>
                         <p className="mb-0 mt-4 text-center"><a href="#0" className="link">Forgot your password?</a></p>
                       </div>
                     </div>
@@ -48,14 +110,14 @@ const Signup = () => {
                           <i className="input-icon uil uil-user"></i>
                         </div>
                         <div className="form-group mt-2">
-                          <input type="email" name="logemail" className="form-style" placeholder="Your Email" id="logemail" autoComplete="off" />
+                          <input type="email" name="logemail" value={email} onChange={(e) => setEmail(e.target.value)} className="form-style" placeholder="Your Email" id="logemail" autoComplete="off" />
                           <i className="input-icon uil uil-at"></i>
                         </div>
                         <div className="form-group mt-2">
-                          <input type="password" name="logpass" className="form-style" placeholder="Your Password" id="logpass" autoComplete="off" />
+                          <input type="password" name="logpass" value={password} onChange={(e) => setPassword(e.target.value)} className="form-style" placeholder="Your Password" id="logpass" autoComplete="off" />
                           <i className="input-icon uil uil-lock-alt"></i>
                         </div>
-                        <a href="#" className="btn mt-4">submit</a>
+                        <button onClick={SignInUser} className="btn mt-4">submit</button>
                       </div>
                     </div>
                   </div>
