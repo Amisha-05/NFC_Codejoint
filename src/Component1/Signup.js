@@ -1,7 +1,6 @@
 import React from 'react';
 import './Signup.css';
-import toolImage from './Images/Toolconnects_haha-removebg-preview.png'
-
+import ayurmedic from './Images/logo.png.png'
 const Signup = () => {
   return (
     <section className="section">
@@ -10,7 +9,7 @@ const Signup = () => {
          
        
         <div className="col-md-6 col-image d-flex justify-content-center align-items-center">
-            <img src={toolImage} alt="" className="custom-img" />
+        <img src={ayurmedic} alt="" className="custom-img" />
          
           </div>
           <div className="col-md-6 col-login d-flex justify-content-center align-items-center">
