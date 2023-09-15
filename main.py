@@ -99,9 +99,13 @@ from flask import Flask, request, jsonify, session
 from flask_bcrypt import Bcrypt #pip install Flask-Bcrypt = https://pypi.org/project/Flask-Bcrypt/
 from flask_cors import CORS, cross_origin #ModuleNotFoundError: No module named 'flask_cors' = pip install Flask-Cors
 from models import db, User
+import os
+import openai
  
 app = Flask(__name__)
  
+api_key = "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"
+
 app.config['SECRET_KEY'] = 'cairocoders-ednalan'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flaskdb.db'
  
@@ -161,5 +165,32 @@ def login_user():
         "email": user.email
     })
  
+@app.get("/query/<string:query>")
+def query_func(query):
+  
+    openai.api_key = api_key
+
+    # Define prompt
+    # user_input = query
+
+    chat = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "system", "content": f"give me ayurvedic remedy for given health problems",},
+                {"role": "user", "content": query}],
+        temperature=0.4,
+        max_tokens=1000
+        # top_p=1,
+        # frequency_penalty=0,
+        # presence_penalty=0.6
+    )
+
+    reply = chat.choices[0].message.content
+    # print(f"\nChatGpt:{reply}")
+    return{"message":(reply)}
+
+
+# you generate timetables in json format. objects are days of a week and keys to include are start_time, end_time, title
+
+
 if __name__ == "__main__":
     app.run(debug=True)
