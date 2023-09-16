@@ -8,6 +8,7 @@ const Signup = () => {
   // make the variables here
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  const [username,setUsername] = useState('');
   
   const navigate = useNavigate();
 
@@ -47,6 +48,7 @@ else if(password.length === 0){
 }
 else{
     axios.post('http://127.0.0.1:5000/signup', {
+        username: username,
         email: email,
         password: password
     })
@@ -106,7 +108,7 @@ else{
                       <div className="section text-center">
                         <h4 className="mb-4 pb-3">Sign Up</h4>
                         <div className="form-group">
-                          <input type="text" name="logname" className="form-style" placeholder="Your Full Name" id="logname" autoComplete="off" />
+                          <input type="text" name="logname" value={username} onChange={(e) => setUsername(e.target.value)} className="form-style" placeholder="Your Full Name" id="logname" autoComplete="off" />
                           <i className="input-icon uil uil-user"></i>
                         </div>
                         <div className="form-group mt-2">

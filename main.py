@@ -104,7 +104,7 @@ import openai
  
 app = Flask(__name__)
  
-api_key = "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"
+api_key = "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"
 
 app.config['SECRET_KEY'] = 'cairocoders-ednalan'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flaskdb.db'
@@ -125,6 +125,7 @@ def hello_world():
  
 @app.route("/signup", methods=["POST"])
 def signup():
+    username = request.json["username"]         #use this variable too in the schema made table
     email = request.json["email"]
     password = request.json["password"]
  
@@ -165,31 +166,49 @@ def login_user():
         "email": user.email
     })
  
-@app.get("/query/<string:query>")
-def query_func(query):
+@app.get("/query/<string:id>/<string:query>")
+def query_func(id,query):
   
     openai.api_key = api_key
 
     # Define prompt
     # user_input = query
-
-    chat = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": f"give me ayurvedic remedy for given health problems",},
-                {"role": "user", "content": query}],
-        temperature=0.4,
-        max_tokens=1000
-        # top_p=1,
-        # frequency_penalty=0,
-        # presence_penalty=0.6
-    )
-
-    reply = chat.choices[0].message.content
+    if id == "Disease":
+        chat = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "give me ayurvedic remedy for given health problems along with chemical medicines",},
+                    {"role": "user", "content": query}],
+            temperature=0.4,
+            max_tokens=1000
+            # top_p=1,
+            # frequency_penalty=0,
+            # presence_penalty=0.6
+        )
+        reply = chat.choices[0].message.content
     # print(f"\nChatGpt:{reply}")
-    return{"message":(reply)}
+        return{"message":(reply)}
+    elif id == "Medicine":
+        chat = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": f"give me ayurvedic alternative for given medicines",},
+                    {"role": "user", "content": query}],
+            temperature=0.4,
+            max_tokens=1000
+            # top_p=1,
+            # frequency_penalty=0,
+            # presence_penalty=0.6
+        )
+        reply = chat.choices[0].message.content
+    # print(f"\nChatGpt:{reply}")
+        return{"message":(reply)}
 
 
-# you generate timetables in json format. objects are days of a week and keys to include are start_time, end_time, title
+'''
+1. data base for hospital and their ayurvedic teachers/doctors
+2. add username and other factor support for signup
+3. make db for youtube links . if possible keep it variable thus new video will also be there. (embed a link to youtube search api?)
+
+'''
 
 
 if __name__ == "__main__":
